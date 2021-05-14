@@ -2,5 +2,8 @@
 Locker documentation
 =========================
 
-:doc:`http-interface`
-:doc:`locker-server`
+.. toctree::
+
+    locker-admin
+    http-interface
+    locker-server
