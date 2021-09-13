@@ -1,14 +1,15 @@
-# Cheatsheet for developers
+# Cheatsheet for developers (optional)
 
-## Locker-admin
+## Locker-server
 
-Dev UWSGI config (.local/locker.ini)
+
+### Dev UWSGI config (.local/locker.ini)
 ~~~
 [uwsgi]
 # module = wsgi:flask_app
 module = locker_server:flask_app
 #venv = /opt/venv/locker-server/
-venv = /home/xenon/venv/locker/
+venv = /home/username/venv/locker/
 
 master = true
 processes = 5
@@ -26,3 +27,47 @@ run:
 
 `sudo -E -u www-data uwsgi .local/locker.ini`
 
+### nginx 
+
+HTTP config:
+~~~
+server {
+    listen 80;
+    server_name *.local.www-security.net;
+
+    error_log  /var/log/nginx/locker-error.log;
+    access_log /var/log/nginx/locker-access.log;
+    
+    location / {
+        include uwsgi_params;
+        # uwsgi_pass unix:/run/locker-server/locker.sock;
+	uwsgi_pass unix:/tmp/locker.sock;    
+	}
+}
+~~~
+
+HTTPS config:
+~~~
+	listen 443 ssl;
+	server_name *.local.www-security.net;
+
+	ssl_certificate     /var/lib/dehydrated/certs/dev.locker.www-security.net/fullchain.pem;
+    	ssl_certificate_key /var/lib/dehydrated/certs/dev.locker.www-security.net/privkey.pem;
+	ssl_protocols 	    TLSv1.2; # TLSv1.1 TLSv1;
+
+	# openssl dhparam -out /etc/nginx/dhparam.pem 4096
+	ssl_dhparam /etc/nginx/dhparam.pem;
+
+	ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !kECDH !DSS !MD5 !RC4 !EXP !PSK !SRP !CAMELLIA !SEED';
+	ssl_prefer_server_ciphers on;
+
+	# add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;	
+	add_header Strict-Transport-Security "max-age=31536000; preload" always;	
+	
+	location / {
+        	include uwsgi_params;
+        	# uwsgi_pass unix:/run/locker-server/locker.sock;
+		uwsgi_pass unix:/tmp/locker.sock;
+    	}
+}
+~~~
