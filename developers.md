@@ -51,9 +51,9 @@ HTTPS config:
 	listen 443 ssl;
 	server_name *.local.www-security.net;
 
-	ssl_certificate     /var/lib/dehydrated/certs/dev.locker.www-security.net/fullchain.pem;
-    	ssl_certificate_key /var/lib/dehydrated/certs/dev.locker.www-security.net/privkey.pem;
-	ssl_protocols 	    TLSv1.2; # TLSv1.1 TLSv1;
+	# ssl_certificate     /var/lib/dehydrated/certs/.../fullchain.pem;
+	# ssl_certificate_key /var/lib/dehydrated/certs/.../privkey.pem;
+	# ssl_protocols 	    TLSv1.2; # TLSv1.1 TLSv1;
 
 	# openssl dhparam -out /etc/nginx/dhparam.pem 4096
 	ssl_dhparam /etc/nginx/dhparam.pem;
