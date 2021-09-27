@@ -38,7 +38,7 @@ minimal example:
 ### etc/options.json
 main configuration file.
 
-#### Minimal example:
+Minimal example:
 ~~~
 {
     "origins": [
@@ -47,7 +47,7 @@ main configuration file.
 }
 ~~~
 
-#### Big example
+Big example:
 ~~~
 {
     "origins": [
