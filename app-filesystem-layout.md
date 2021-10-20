@@ -55,13 +55,13 @@ Big example:
     ],
     "query-options": [
         {
-            "filter_method": "GET",
+            "filter_methods": ["GET"],
             "headers": {
                 "Cache-Control": "no-cache, no-store, must-revalidate"
             }
         },
         {
-            "filter_method": "PUT",
+            "filter_methods": ["PUT"],
             "filter_path": "${HOME}/rw/",
             "options": {
                 "create": true,
