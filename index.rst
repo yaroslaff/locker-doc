@@ -6,6 +6,7 @@ Locker documentation
 
     locker-admin
     app-filesystem-layout
+    options-json
     http-interface
     locker-server
     developers
