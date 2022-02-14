@@ -37,7 +37,7 @@ minimal example:
 
 ### etc/options.json
 
-options.json is main configuration file. See [options-json](option-json.md) page.
+options.json is main configuration file. See [options-json](options-json.md) page.
 
 ### etc/users.json
 Main users database (something like /etc/passwd)
