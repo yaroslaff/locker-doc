@@ -67,8 +67,8 @@ Always uses method 'POST' and empty payload.
 ### 'redis:publish' method
 ~~~json
 "flags.json": {
-    "notify": "http",
-    "URL": "http://localhost:5151/myapps"
+    "notify": "redis:publish",
+    "channel": "sleep"
 }
 ~~~
 
