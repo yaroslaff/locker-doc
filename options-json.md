@@ -40,12 +40,48 @@ Big example:
     ],
     "flag-options": {
     	"flags.json": {
-		"notify": "http",
-		"URL": "http://localhost:5151/myapps"
-	}
+	    	"notify": "http",
+    		"URL": "http://localhost:5151/myapps"
+	    }
     },
     "accept_new_users": true,
     "noregister_url": "http://google.com/"
 }
 ~~~
 
+## flag-options
+`flag-options` is dictionary, where key is basename of flags file. With `flag-options` locker-server can send instant notifications.
+
+### 'http' method
+
+Example:
+~~~json
+"flags.json": {
+    "notify": "http",
+    "URL": "http://localhost:5151/myapps"
+}
+~~~
+
+Always uses method 'POST' and empty payload.
+
+### 'redis:publish' method
+~~~json
+"flags.json": {
+    "notify": "http",
+    "URL": "http://localhost:5151/myapps"
+}
+~~~
+
+Sends application name to channel `channel` (default: "sleep")
+
+### 'socketio' method 
+Example:
+~~~json
+"flags.json": {
+    "notify": "socketio",
+    "room": "myapps",
+    "data": "flag updated"
+}
+~~~
+
+sends event `event` to room `room` with message `data`.
