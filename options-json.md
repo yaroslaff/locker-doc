@@ -1,4 +1,4 @@
-# Options.json
+## Options.json
 
 
 main configuration file.
@@ -49,10 +49,10 @@ Big example:
 }
 ~~~
 
-## flag-options
+### flag-options
 `flag-options` is dictionary, where key is basename of flags file. With `flag-options` locker-server can send instant notifications.
 
-### 'http' method
+#### 'http' method
 
 Example:
 ~~~json
@@ -64,7 +64,7 @@ Example:
 
 Always uses method 'POST' and empty payload.
 
-### 'redis:publish' method
+#### 'redis:publish' method
 ~~~json
 "flags.json": {
     "notify": "redis:publish",
@@ -74,7 +74,7 @@ Always uses method 'POST' and empty payload.
 
 Sends application name to channel `channel` (default: "sleep")
 
-### 'socketio' method 
+#### 'socketio' method 
 Example:
 ~~~json
 "flags.json": {

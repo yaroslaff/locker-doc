@@ -77,6 +77,14 @@ VENDOR_CREDENTIALS:
     DISCOVERY_URL: https://accounts.google.com/.well-known/openid-configuration
     CLIENT_ID: zzz.apps.googleusercontent.com
     CLIENT_SECRET: zzz
+
+# host
+AUTH_HOST: auth.ll.www-security.net
+
+# pubconf
+PUBCONF:
+  name: "Development locker server"
+  socketio_addr: "http://socketio.ll.www-security.net:8899/"
 ~~~
 
 ## Create first app

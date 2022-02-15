@@ -5,7 +5,7 @@ If you're web developer (you have your application and need to maintain locker a
 
 ### Edit remote files
 ~~~
-bin/locker-admin --edit etc/options.json
+bin/locker-admin edit etc/options.json
 ~~~
 
 change editor
