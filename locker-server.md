@@ -1,36 +1,5 @@
 # Locker server tips
 
-## Generate wildcard certificates with dehydrated
-
-`/etc/dehydrated/config`
-~~~
-CONFIG_D=/etc/dehydrated/conf.d
-BASEDIR=/var/lib/dehydrated
-WELLKNOWN="${BASEDIR}/acme-challenges"
-DOMAINS_TXT="/etc/dehydrated/domains.txt"
-
-CHALLENGETYPE="dns-01"
-HOOK="${BASEDIR}/hooks.sh"
-~~~
-
-https://www.aaflalo.me/2017/02/lets-encrypt-with-dehydrated-dns-01/
-
-`/var/lib/dehydrated/hooks.sh`
-patch, add sleep:
-~~~
-    lexicon cloudflare create ${TLD_DOMAIN} TXT --name="_acme-challenge.${DOMAIN}." --content="$TOKEN_VALUE"  
-    echo sleep...
-    sleep 60
-~~~
-
-
-Generate and renew cron script `/etc/cron.daily/renew-locker.cert.sh` :
-~~~
-dehydrated -c --challenge dns-01 --hook /var/lib/dehydrated/hooks.sh
-~~~
-
-
-
 ## Install required packages
 ~~~
 # apt install redis

@@ -9,5 +9,6 @@ Locker documentation
     options-json
     http-interface
     locker-server
+    locker-server-env
     developers
     
