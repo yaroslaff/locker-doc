@@ -29,31 +29,44 @@ run:
 
 ### nginx 
 
-HTTP config:
+
+/etc/nginx/sites-available/locker-https :
 ~~~
 server {
+
     listen 80;
-    server_name *.local.www-security.net;
+    server_name rudev.www-security.net, *.rudev.www-security.net;
 
     error_log  /var/log/nginx/locker-error.log;
     access_log /var/log/nginx/locker-access.log;
     
-    location / {
-        include uwsgi_params;
-        # uwsgi_pass unix:/run/locker-server/locker.sock;
-	uwsgi_pass unix:/tmp/locker.sock;    
-	}
+    #location / {
+    #    include uwsgi_params;
+    #    uwsgi_pass unix:/run/locker-server/locker.sock;
+    #}
+
+    location ^~ /.well-known/acme-challenge/ {
+      alias /var/www/acme/.well-known/acme-challenge/;
+    }   
 }
+
+server {
+	server_name rudev.www-security.net *.rudev.www-security.net;
+    	ssl_certificate /etc/letsencrypt/live/rudev.www-security.net/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/rudev.www-security.net/privkey.pem; # managed by Certbot
+
+	include	include.d/locker.conf;
+}
+
+# include vhosts (required. locker must be in same domain as frontend, with certificate)
+include vhosts/*.conf;
 ~~~
 
-HTTPS config:
+/etc/nginx/include.d/locker.conf :
 ~~~
+	# include.d/locker.conf
 	listen 443 ssl;
-	server_name *.local.www-security.net;
-
-	# ssl_certificate     /var/lib/dehydrated/certs/.../fullchain.pem;
-	# ssl_certificate_key /var/lib/dehydrated/certs/.../privkey.pem;
-	# ssl_protocols 	    TLSv1.2; # TLSv1.1 TLSv1;
+	ssl_protocols 	    TLSv1.2; # TLSv1.1 TLSv1;
 
 	# openssl dhparam -out /etc/nginx/dhparam.pem 4096
 	ssl_dhparam /etc/nginx/dhparam.pem;
@@ -61,13 +74,55 @@ HTTPS config:
 	ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !kECDH !DSS !MD5 !RC4 !EXP !PSK !SRP !CAMELLIA !SEED';
 	ssl_prefer_server_ciphers on;
 
-	# add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;	
-	add_header Strict-Transport-Security "max-age=31536000; preload" always;	
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;	
 	
 	location / {
         	include uwsgi_params;
-        	# uwsgi_pass unix:/run/locker-server/locker.sock;
-		uwsgi_pass unix:/tmp/locker.sock;
-    	}
-}
+        	uwsgi_pass unix:/run/locker-server/locker.sock;
+   	}
 ~~~
+
+EXAMPLE vhost file (auto-generated):
+~~~
+#
+# Template for locker virtual hosts
+#
+
+server {
+
+    listen 80;
+    server_name notebook-u1.rudev.www-security.net notebook.l.www-security.com;
+
+    error_log  /var/log/nginx/locker-error.log;
+    access_log /var/log/nginx/locker-access.log;
+    
+    location ^~ /.well-known/acme-challenge/ {
+      alias /var/www/acme/.well-known/acme-challenge/;
+    }
+
+    location / {
+      return 301 https://$host$request_uri;    	
+    }
+
+}
+
+server {
+	server_name notebook-u1.rudev.www-security.net notebook.l.www-security.com;
+    	ssl_certificate /etc/letsencrypt/live/notebook-u1.rudev.www-security.net/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/notebook-u1.rudev.www-security.net/privkey.pem; # managed by Certbot
+
+	include	include.d/locker.conf;
+}
+
+~~~
+
+### tunnel locker-server socket from dev machine (even private IP) to webserver
+
+~~~
+ssh -fN  -R /tmp/locker.sock:/tmp/locker.sock www-data@rudev
+~~~
+Caveats:
+- this user (who run ssh) must be able to rw to local socket (syntax is -R local:remote) 
+- you may use `StreamLocalBindMask=0111` and/or `StreamLocalBindUnlink=yes` in sshd_config (on **server** side)
+- www-data must be ssh-able (have shell, key in authorized_keys)
+
