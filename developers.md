@@ -79,7 +79,7 @@ include vhosts/*.conf;
 	
 	location / {
         	include uwsgi_params;
-        	uwsgi_pass unix:/run/locker-server/locker.sock;
+        	uwsgi_pass 127.0.0.1:7060;
    	}
 ~~~
 
@@ -120,10 +120,6 @@ server {
 ### tunnel locker-server socket from dev machine (even private IP) to webserver
 
 ~~~
-ssh -fN  -R /tmp/locker.sock:/tmp/locker.sock www-data@rudev
+ssh -fN SERVER -R 7060:localhost:7060
 ~~~
-Caveats:
-- this user (who run ssh) must be able to rw to local socket (syntax is -R local:remote) 
-- you may use `StreamLocalBindMask=0111` and/or `StreamLocalBindUnlink=yes` in sshd_config (on **server** side)
-- www-data must be ssh-able (have shell, key in authorized_keys)
 
