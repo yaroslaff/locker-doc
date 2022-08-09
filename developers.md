@@ -6,10 +6,8 @@
 ### Dev UWSGI config (.local/locker.ini)
 ~~~
 [uwsgi]
-# module = wsgi:flask_app
 module = locker_server:flask_app
-#venv = /opt/venv/locker-server/
-venv = /home/username/venv/locker/
+venv = /opt/venv/locker/
 
 master = true
 processes = 5
@@ -17,10 +15,13 @@ processes = 5
 plugins-dir=/usr/lib/uwsgi/plugins
 plugin=python3
 
-socket = /run/locker-server/locker.sock
+socket = 127.0.0.1:7060
 chmod-socket = 660
 vacuum = true
 die-on-term = true
+
+gevent = 1000
+http-raw-body=true
 ~~~
 
 run:
