@@ -4,6 +4,7 @@ Locker documentation
 
 .. toctree::
 
+    locker-scheme
     locker-admin
     app-filesystem-layout
     options-json
